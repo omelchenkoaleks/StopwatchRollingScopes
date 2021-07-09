@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.addNewStopwatchButton.setOnClickListener {
-            stopwatches.add(Stopwatch(nextId++, 0, false))
+            stopwatches.add(Stopwatch(nextId++, 0, true))
             stopwatchAdapter.submitList(stopwatches.toList())
         }
     }
