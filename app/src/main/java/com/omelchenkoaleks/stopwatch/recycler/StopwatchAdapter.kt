@@ -4,15 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.omelchenkoaleks.stopwatch.StopwatchListener
 import com.omelchenkoaleks.stopwatch.databinding.StopwatchItemBinding
 import com.omelchenkoaleks.stopwatch.model.Stopwatch
 
-class StopwatchAdapter : ListAdapter<Stopwatch, StopwatchViewHolder>(itemComparator) {
+class StopwatchAdapter(
+    private val listener: StopwatchListener
+) : ListAdapter<Stopwatch, StopwatchViewHolder>(itemComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopwatchViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = StopwatchItemBinding.inflate(layoutInflater, parent, false)
-        return StopwatchViewHolder(binding) // раздуваем вью и возвращаем созданный ViewHolder
+        return StopwatchViewHolder(
+            binding,
+            listener,
+            binding.root.context.resources
+        ) // раздуваем вью и возвращаем созданный ViewHolder
     }
 
     /*
@@ -40,6 +47,14 @@ class StopwatchAdapter : ListAdapter<Stopwatch, StopwatchViewHolder>(itemCompara
                 return oldItem.currentMs == newItem.currentMs &&
                         oldItem.isStarted == newItem.isStarted
             }
+
+            /*
+                P.S. В адаптере, в имплементации DiffUtil мы добавили метод getChangePayload.
+                В данном случае это утовка, чтобы айтем не бликовал
+                (проигрывается анимация для всего айтема), когда мы нажимаем на кнопки.
+                Нормальная реализация payload выходит за рамки этого простого примера.
+             */
+            override fun getChangePayload(oldItem: Stopwatch, newItem: Stopwatch) = Any()
         }
     }
 }
